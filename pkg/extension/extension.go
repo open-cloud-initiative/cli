@@ -1,5 +1,7 @@
 package extension
 
+import "io"
+
 type Extension interface {
 	// Name is the name of the extension
 	Name() string
@@ -22,7 +24,10 @@ type Extension interface {
 }
 
 type ExtensionManager interface {
-	List() []Extension
+	// ListExtensions lists all installed extensions
+	ListExtensions() []Extension
+	// Dispatch dispatches a command to the extension
 	Dispatch(args []string, stdin io.Reader, stdout, stderr io.Writer) (bool, error)
+	// EnableDryRunMode enables dry run mode
 	EnableDryRunMode()
 }
