@@ -25,6 +25,8 @@ var (
 func init() {
 	cobra.OnInitialize(initConfig)
 
+	RootCmd.AddCommand(InitCmd)
+
 	RootCmd.PersistentFlags().StringVarP(&cfg.File, "config", "c", cfg.File, "config file")
 	RootCmd.PersistentFlags().BoolVarP(&cfg.Flags.Verbose, "verbose", "v", cfg.Flags.Verbose, "verbose output")
 	RootCmd.PersistentFlags().BoolVarP(&cfg.Flags.Dry, "dry", "d", cfg.Flags.Dry, "dry run")
@@ -45,17 +47,20 @@ func initConfig() {
 var RootCmd = &cobra.Command{
 	Use:   "ocictl",
 	Short: "ocictl",
-	RunE: func(cmd *cobra.Command, _ []string) error {
-		return runRoot(cmd.Context())
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return runRoot(cmd.Context(), args...)
 	},
 	Version: fmt.Sprintf(versionFmt, version, commit, date),
 }
 
-func runRoot(ctx context.Context) error {
+func runRoot(_ context.Context, args ...string) error {
 	err := cfg.LoadSpec()
 	if err != nil {
 		return err
 	}
+
+	ext, extArgs := args[0], args[1:]
+	fmt.Printf("Running command: %s %v\n", ext, extArgs)
 
 	cfg.Lock()
 	defer cfg.Unlock()

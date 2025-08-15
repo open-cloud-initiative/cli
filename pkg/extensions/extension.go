@@ -23,7 +23,7 @@ type Extension interface {
 	Owner() string
 }
 
-type ExtensionManager interface {
+type Manager interface {
 	// ListExtensions lists all installed extensions
 	ListExtensions() []Extension
 	// Dispatch dispatches a command to the extension
