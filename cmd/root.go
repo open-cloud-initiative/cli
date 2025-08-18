@@ -30,12 +30,13 @@ func Init() error {
 		return err
 	}
 
-	exts, err := extensions.Scan("tmp")
+	mgr := extensions.NewManager()
+	err = mgr.Scan(extensions.DataDir())
 	if err != nil {
 		return err
 	}
 
-	for _, ext := range exts {
+	for _, ext := range mgr.ListExtensions() {
 		RootCmd.AddCommand(ext.Cmd())
 	}
 

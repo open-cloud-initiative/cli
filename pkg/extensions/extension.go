@@ -8,6 +8,7 @@ import (
 	"plugin"
 	"strings"
 
+	"github.com/katallaxie/pkg/slices"
 	"github.com/spf13/cobra"
 )
 
@@ -33,10 +34,46 @@ type Extension interface {
 
 // Manager manages a collection of extensions.
 type Manager interface {
+	// Scan is scanning for extensions
+	Scan(path string) error
 	// ListExtensions lists all installed extensions
 	ListExtensions() []Extension
 	// EnableDryRunMode enables dry run mode
 	EnableDryRunMode()
+}
+
+var _ Manager = (*manager)(nil)
+
+type manager struct {
+	dryRun     bool
+	extensions []Extension
+}
+
+// ListExtensions implements Manager.ListExtensions.
+func (m *manager) ListExtensions() []Extension {
+	return m.extensions
+}
+
+// EnableDryRunMode implements Manager.EnableDryRunMode.
+func (m *manager) EnableDryRunMode() {
+	m.dryRun = true
+}
+
+// Scan implements Manager.Scan.
+func (m *manager) Scan(path string) error {
+	exts, err := Scan(path)
+	if err != nil {
+		return err
+	}
+
+	m.extensions = slices.Append(m.extensions, exts...)
+
+	return nil
+}
+
+// NewManager creates a new extension manager.
+func NewManager() Manager {
+	return &manager{}
 }
 
 var _ Extension = (*UnimplementedExtension)(nil)
@@ -119,4 +156,9 @@ func Load(path string) (Extension, error) {
 	}
 
 	return e, nil
+}
+
+// DataDir returns the data directory for the extension.
+func DataDir() string {
+	return filepath.Join(os.Getenv("HOME"), ".ocictl")
 }
