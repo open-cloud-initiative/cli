@@ -36,11 +36,11 @@ func Init() error {
 		return err
 	}
 
+	RootCmd.AddCommand(ExtCmd)
+
 	for _, ext := range mgr.ListExtensions() {
 		RootCmd.AddCommand(ext.Cmd())
 	}
-
-	RootCmd.AddCommand(InitCmd)
 
 	RootCmd.PersistentFlags().BoolVarP(&cfg.Flags.Verbose, "verbose", "v", cfg.Flags.Verbose, "verbose output")
 	RootCmd.PersistentFlags().BoolVarP(&cfg.Flags.Dry, "dry", "d", cfg.Flags.Dry, "dry run")
@@ -67,6 +67,6 @@ var RootCmd = &cobra.Command{
 	Version: fmt.Sprintf(versionFmt, version, commit, date),
 }
 
-func runRoot(_ context.Context, args ...string) error {
+func runRoot(_ context.Context, _ ...string) error {
 	return nil
 }

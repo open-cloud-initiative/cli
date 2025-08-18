@@ -2,10 +2,7 @@ package config
 
 import (
 	"os"
-	"path/filepath"
 	"sync"
-
-	"github.com/open-cloud-initiative/cli/pkg/spec"
 
 	"github.com/katallaxie/pkg/filex"
 )
@@ -43,8 +40,6 @@ type Config struct {
 	Stdout *os.File
 	// Stderr ...
 	Stderr *os.File
-	// Spec ...
-	Spec *spec.Spec
 
 	sync.RWMutex
 }
@@ -52,12 +47,10 @@ type Config struct {
 // New returns a new config.
 func New() *Config {
 	return &Config{
-		File:   "~/.ocictl.yml",
 		Stdin:  os.Stdin,
 		Stdout: os.Stdout,
 		Stderr: os.Stderr,
 		Flags:  &Flags{},
-		Spec:   spec.Default(),
 	}
 }
 
@@ -76,14 +69,4 @@ func (c *Config) InitDefaultConfig() error {
 // Cwd returns the current working directory.
 func (c *Config) Cwd() (string, error) {
 	return os.Getwd()
-}
-
-// LoadSpec is a helper to load the spec from the config file.
-func (c *Config) LoadSpec() error {
-	f, err := os.ReadFile(filepath.Clean(c.File))
-	if err != nil {
-		return err
-	}
-
-	return c.Spec.UnmarshalYAML(f)
 }
