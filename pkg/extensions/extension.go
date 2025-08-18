@@ -37,8 +37,8 @@ type Extension interface {
 	Owner() string
 }
 
-// ExtensionManager manages a collection of extensions.
-type ExtensionManager interface {
+// Manager manages a collection of extensions.
+type Manager interface {
 	// ListExtensions lists all installed extensions
 	ListExtensions() []Extension
 	// Dispatch dispatches a command to the extension
@@ -52,47 +52,47 @@ var _ Extension = (*UnimplementedExtension)(nil)
 
 type UnimplementedExtension struct{}
 
-// Name implements Extension.Name
+// Name implements Extension.Name.
 func (e *UnimplementedExtension) Name() string {
 	return Unknown
 }
 
-// Path implements Extension.Path
+// Path implements Extension.Path.
 func (e *UnimplementedExtension) Path() string {
 	return Unknown
 }
 
-// CurrentVersion implements Extension.CurrentVersion
+// CurrentVersion implements Extension.CurrentVersion.
 func (e *UnimplementedExtension) CurrentVersion() string {
 	return Unknown
 }
 
-// LatestVersion implements Extension.LatestVersion
+// LatestVersion implements Extension.LatestVersion.
 func (e *UnimplementedExtension) LatestVersion() string {
 	return Unknown
 }
 
-// IsPinned implements Extension.IsPinned
+// IsPinned implements Extension.IsPinned.
 func (e *UnimplementedExtension) IsPinned() bool {
 	return false
 }
 
-// UpdateAvailable implements Extension.UpdateAvailable
+// UpdateAvailable implements Extension.UpdateAvailable.
 func (e *UnimplementedExtension) UpdateAvailable() bool {
 	return false
 }
 
-// IsBinary implements Extension.IsBinary
+// IsBinary implements Extension.IsBinary.
 func (e *UnimplementedExtension) IsBinary() bool {
 	return false
 }
 
-// IsLocal implements Extension.IsLocal
+// IsLocal implements Extension.IsLocal.
 func (e *UnimplementedExtension) IsLocal() bool {
 	return false
 }
 
-// Owner implements Extension.Owner
+// Owner implements Extension.Owner.
 func (e *UnimplementedExtension) Owner() string {
 	return Unknown
 }
