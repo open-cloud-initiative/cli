@@ -2,6 +2,7 @@ package extensions
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"plugin"
@@ -67,7 +68,7 @@ func (e *UnimplementedExtension) Cmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "unknown",
 		Short: "Unknown extension",
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: func(cmd *cobra.Command, _ []string) {
 			cmd.Println("Unknown extension")
 		},
 	}
@@ -114,7 +115,7 @@ func Load(path string) (Extension, error) {
 
 	e, ok := symPlugin.(Extension)
 	if !ok {
-		return nil, err
+		return nil, fmt.Errorf("plugin %s does not implement Extension interface", path)
 	}
 
 	return e, nil

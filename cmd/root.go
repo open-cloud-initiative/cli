@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	config "github.com/open-cloud-initiative/cli/internal/cfg"
+	"github.com/open-cloud-initiative/cli/pkg/extensions"
 
 	"github.com/spf13/cobra"
 )
@@ -29,9 +30,17 @@ func Init() error {
 		return err
 	}
 
+	exts, err := extensions.Scan("tmp")
+	if err != nil {
+		return err
+	}
+
+	for _, ext := range exts {
+		RootCmd.AddCommand(ext.Cmd())
+	}
+
 	RootCmd.AddCommand(InitCmd)
 
-	RootCmd.PersistentFlags().StringVarP(&cfg.File, "config", "c", cfg.File, "config file")
 	RootCmd.PersistentFlags().BoolVarP(&cfg.Flags.Verbose, "verbose", "v", cfg.Flags.Verbose, "verbose output")
 	RootCmd.PersistentFlags().BoolVarP(&cfg.Flags.Dry, "dry", "d", cfg.Flags.Dry, "dry run")
 	RootCmd.PersistentFlags().BoolVarP(&cfg.Flags.Root, "root", "r", cfg.Flags.Root, "run as root")
@@ -58,21 +67,5 @@ var RootCmd = &cobra.Command{
 }
 
 func runRoot(_ context.Context, args ...string) error {
-	err := cfg.LoadSpec()
-	if err != nil {
-		return err
-	}
-
-	ext, extArgs := args[0], args[1:]
-	fmt.Printf("Running command: %s %v\n", ext, extArgs)
-
-	cfg.Lock()
-	defer cfg.Unlock()
-
-	err = cfg.Spec.Validate()
-	if err != nil {
-		return err
-	}
-
 	return nil
 }

@@ -18,8 +18,6 @@ import (
 var validate = validator.New()
 
 const (
-	// DefaultDirectory is the default directory for the configuration file.
-	DefaultDirectory = "ocictl"
 	// DefaultPath is the default path for the configuration file.
 	DefaultPath = ".ocictl"
 	// DefaultFilename is the default filename for the configuration file.
@@ -30,6 +28,8 @@ const (
 type Spec struct {
 	// Version is the version of the configuration file.
 	Version int `yaml:"version" validate:"required,eq=1"`
+	// Folder is the folder for the configuration file.
+	Folder string `yaml:".oci" validate:"required"`
 
 	sync.Mutex `yaml:"-"`
 }
@@ -37,10 +37,12 @@ type Spec struct {
 // UnmarshalYAML overrides the default unmarshaler for the spec.
 func (s *Spec) UnmarshalYAML(data []byte) error {
 	spec := struct {
-		Version int  `yaml:"version" validate:"required,eq=1"`
-		Stderr  bool `yaml:"stderr,omitempty"`
-		Stdout  bool `yaml:"stdout,omitempty"`
+		Version int    `yaml:"version" validate:"required,eq=1"`
+		Folder  string `yaml:".oci" validate:"required"`
+		Stderr  bool   `yaml:"stderr,omitempty"`
+		Stdout  bool   `yaml:"stdout,omitempty"`
 	}{
+		Folder: DefaultPath,
 		Stderr: true,
 		Stdout: true,
 	}

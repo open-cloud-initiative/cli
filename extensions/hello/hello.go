@@ -1,43 +1,44 @@
-package hello
+package main
 
 import (
 	"github.com/open-cloud-initiative/cli/pkg/extensions"
+
 	"github.com/spf13/cobra"
 )
 
-var _ extensions.Extension = &helloExtension{}
+var _ extensions.Extension = (*HelloExtension)(nil)
 
-type helloExtension struct{}
+type HelloExtension struct{}
 
 // Name implements Extension.Name.
-func (e *helloExtension) Name() string {
+func (e *HelloExtension) Name() string {
 	return "hello"
 }
 
 // Path implements Extension.Path.
-func (e *helloExtension) Path() string {
+func (e *HelloExtension) Path() string {
 	return extensions.Unknown
 }
 
 // Version implements Extension.Version.
-func (e *helloExtension) Version() string {
+func (e *HelloExtension) Version() string {
 	return extensions.Unknown
 }
 
 // Owner implements Extension.Owner.
-func (e *helloExtension) Owner() string {
+func (e *HelloExtension) Owner() string {
 	return "oci"
 }
 
 // Cmd implements Extension.Cmd.
-func (e *helloExtension) Cmd() *cobra.Command {
+func (e *HelloExtension) Cmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "hello",
 		Short: "Hello extension",
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: func(cmd *cobra.Command, _ []string) {
 			cmd.Println("Hello world!")
 		},
 	}
 }
 
-var Extension = &helloExtension{}
+var Extension = HelloExtension{}
