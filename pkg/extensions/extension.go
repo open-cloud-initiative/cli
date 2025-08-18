@@ -1,12 +1,13 @@
-package extension
+package extensions
 
 import (
 	"errors"
-	"io"
 	"os"
 	"path/filepath"
 	"plugin"
 	"strings"
+
+	"github.com/spf13/cobra"
 )
 
 // Unknown is returned when an extension is not found.
@@ -21,29 +22,18 @@ type Extension interface {
 	Name() string
 	// Path is the path to the extension
 	Path() string
-	// CurrentVersion is the current version of the extension
-	CurrentVersion() string
-	// LatestVersion is the latest version of the extension
-	LatestVersion() string
-	// IsPinned indicates if the extension is pinned
-	IsPinned() bool
-	// UpdateAvailable indicates if an update is available for the extension
-	UpdateAvailable() bool
-	// IsBinary indicates if the extension is a binary
-	IsBinary() bool
-	// IsLocal indicates if the extension is a local extension
-	IsLocal() bool
+	// Version is the version of the extension
+	Version() string
 	// Owner is the owner of the extension
 	Owner() string
+	// Cmd is the command for the extension
+	Cmd() *cobra.Command
 }
 
 // Manager manages a collection of extensions.
 type Manager interface {
 	// ListExtensions lists all installed extensions
 	ListExtensions() []Extension
-	// Dispatch dispatches a command to the extension
-	Dispatch(args []string, stdin io.Reader, stdout, stderr io.Writer) (bool, error)
-	// EnableDryRunMode enables dry run mode
 	// EnableDryRunMode enables dry run mode
 	EnableDryRunMode()
 }
@@ -62,39 +52,25 @@ func (e *UnimplementedExtension) Path() string {
 	return Unknown
 }
 
-// CurrentVersion implements Extension.CurrentVersion.
-func (e *UnimplementedExtension) CurrentVersion() string {
+// Version implements Extension.Version.
+func (e *UnimplementedExtension) Version() string {
 	return Unknown
-}
-
-// LatestVersion implements Extension.LatestVersion.
-func (e *UnimplementedExtension) LatestVersion() string {
-	return Unknown
-}
-
-// IsPinned implements Extension.IsPinned.
-func (e *UnimplementedExtension) IsPinned() bool {
-	return false
-}
-
-// UpdateAvailable implements Extension.UpdateAvailable.
-func (e *UnimplementedExtension) UpdateAvailable() bool {
-	return false
-}
-
-// IsBinary implements Extension.IsBinary.
-func (e *UnimplementedExtension) IsBinary() bool {
-	return false
-}
-
-// IsLocal implements Extension.IsLocal.
-func (e *UnimplementedExtension) IsLocal() bool {
-	return false
 }
 
 // Owner implements Extension.Owner.
 func (e *UnimplementedExtension) Owner() string {
 	return Unknown
+}
+
+// Cmd implements Extension.Cmd.
+func (e *UnimplementedExtension) Cmd() *cobra.Command {
+	return &cobra.Command{
+		Use:   "unknown",
+		Short: "Unknown extension",
+		Run: func(cmd *cobra.Command, args []string) {
+			cmd.Println("Unknown extension")
+		},
+	}
 }
 
 // Scan is scanning a folder for extensions.

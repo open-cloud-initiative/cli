@@ -3,7 +3,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"log"
 
 	config "github.com/open-cloud-initiative/cli/internal/cfg"
 
@@ -22,8 +21,13 @@ var (
 	date    = "unknown"
 )
 
-func init() {
-	cobra.OnInitialize(initConfig)
+func Init() error {
+	ctx := context.Background()
+
+	err := cfg.InitDefaultConfig()
+	if err != nil {
+		return err
+	}
 
 	RootCmd.AddCommand(InitCmd)
 
@@ -35,13 +39,13 @@ func init() {
 
 	RootCmd.SilenceErrors = true
 	RootCmd.SilenceUsage = true
-}
 
-func initConfig() {
-	err := cfg.InitDefaultConfig()
+	err = RootCmd.ExecuteContext(ctx)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
+
+	return nil
 }
 
 var RootCmd = &cobra.Command{
