@@ -2,7 +2,10 @@ package cmd
 
 import (
 	"context"
+	"log"
 
+	"github.com/katallaxie/pkg/slices"
+	"github.com/open-cloud-initiative/cli/pkg/extensions"
 	"github.com/spf13/cobra"
 )
 
@@ -31,5 +34,9 @@ var ExtListCmd = &cobra.Command{
 }
 
 func runExtList(_ context.Context) error {
+	slices.ForEach(func(ext extensions.Extension, _ int) {
+		log.Print(ext.Name())
+	}, mgr.ListExtensions()...)
+
 	return nil
 }

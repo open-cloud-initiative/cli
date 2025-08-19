@@ -12,15 +12,15 @@ import (
 
 var cfg = config.New()
 
-const (
-	versionFmt = "%s (%s %s)"
-)
+const versionFmt = "%s (%s %s)"
 
 var (
 	version = "dev"
 	commit  = "none"
 	date    = "unknown"
 )
+
+var mgr extensions.Manager
 
 func Init() error {
 	ctx := context.Background()
@@ -30,7 +30,7 @@ func Init() error {
 		return err
 	}
 
-	mgr := extensions.NewManager()
+	mgr = extensions.NewManager()
 	err = mgr.Scan(extensions.DataDir())
 	if err != nil {
 		return err
