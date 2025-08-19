@@ -24,8 +24,6 @@ type Extension interface {
 	Name() string
 	// Path is the path to the extension
 	Path() string
-	// Version is the version of the extension
-	Version() string
 	// Owner is the owner of the extension
 	Owner() string
 	// Cmd is the command for the extension
@@ -87,11 +85,6 @@ func (e *UnimplementedExtension) Name() string {
 
 // Path implements Extension.Path.
 func (e *UnimplementedExtension) Path() string {
-	return Unknown
-}
-
-// Version implements Extension.Version.
-func (e *UnimplementedExtension) Version() string {
 	return Unknown
 }
 

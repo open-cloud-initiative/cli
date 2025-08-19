@@ -10,6 +10,15 @@ var _ extensions.Extension = (*HelloExtension)(nil)
 
 type HelloExtension struct{}
 
+var helloCmd = &cobra.Command{
+	Use:     "hello",
+	Short:   "Hello extension",
+	Version: extensions.Unknown,
+	Run: func(cmd *cobra.Command, _ []string) {
+		cmd.Println("Hello world!")
+	},
+}
+
 // Name implements Extension.Name.
 func (e *HelloExtension) Name() string {
 	return "hello"
@@ -20,11 +29,6 @@ func (e *HelloExtension) Path() string {
 	return extensions.Unknown
 }
 
-// Version implements Extension.Version.
-func (e *HelloExtension) Version() string {
-	return extensions.Unknown
-}
-
 // Owner implements Extension.Owner.
 func (e *HelloExtension) Owner() string {
 	return "oci"
@@ -32,13 +36,7 @@ func (e *HelloExtension) Owner() string {
 
 // Cmd implements Extension.Cmd.
 func (e *HelloExtension) Cmd() *cobra.Command {
-	return &cobra.Command{
-		Use:   "hello",
-		Short: "Hello extension",
-		Run: func(cmd *cobra.Command, _ []string) {
-			cmd.Println("Hello world!")
-		},
-	}
+	return helloCmd
 }
 
 var Extension = HelloExtension{}

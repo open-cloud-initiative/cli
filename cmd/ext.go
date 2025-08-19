@@ -35,7 +35,7 @@ var ExtListCmd = &cobra.Command{
 
 func runExtList(_ context.Context) error {
 	slices.ForEach(func(ext extensions.Extension, _ int) {
-		log.Print(ext.Name())
+		log.Print(ext.Cmd().Use)
 	}, mgr.ListExtensions()...)
 
 	return nil
