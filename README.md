@@ -6,6 +6,10 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/open-cloud-initiative/cli)](https://goreportcard.com/report/github.com/open-cloud-initiative/cli)
 [![Codecov](https://codecov.io/gh/open-cloud-initiative/cli/branch/main/graph/badge.svg)](https://codecov.io/gh/open-cloud-initiative/cli)
 
+## Usage
+
+The folder to store extensions is `$HOME\.ocictl`. The `$HOME` variable is used to resolve the users home folder.
+
 ## License
 
 [Apache 2.0](/LICENSE)
